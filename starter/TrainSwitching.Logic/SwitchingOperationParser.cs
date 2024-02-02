@@ -1,5 +1,6 @@
 namespace TrainSwitching.Logic;
 
+using static TrainSwitching.Logic.Constants;
 public static class SwitchingOperationParser
 {
     /// <summary>
@@ -9,8 +10,7 @@ public static class SwitchingOperationParser
     /// <returns>The parsed switching operation</returns>
     public static SwitchingOperation Parse(string inputLine)
     {
-        // TODO: Implement this method
-
+        /*
         var output = new SwitchingOperation();
 
         var parts = inputLine.Split(", ");
@@ -38,5 +38,35 @@ public static class SwitchingOperationParser
         }
 
         return output;
+        */
+
+        var output = new SwitchingOperation();
+
+        var parts = inputLine.Split(", ");
+
+        output.TrackNumber = int.Parse(parts[0].Split(" ")[2]);
+
+        if (parts[1].StartsWith("add")) { output.OperationType = OperationType.Add; }
+        else if (parts[1].StartsWith("remove")) { output.OperationType = OperationType.Remove; }
+        else if (parts[1].StartsWith("train leaves")) { output.OperationType = OperationType.TrainLeave; }
+
+        if (parts[1].EndsWith("West")) { output.Direction = Direction.West; }
+        else if (parts[1].EndsWith("East")) { output.Direction = Direction.East; }
+
+        if (output.OperationType == OperationType.Add)
+        {
+            if (parts[1].Contains("Locomotive")) { output.WagonType = WagonType.Locomotive; }
+            else if (parts[1].Contains("Passenger")) { output.WagonType = WagonType.Passenger; }
+            else if (parts[1].Contains("Freight")) { output.WagonType = WagonType.Freight; }
+            else if (parts[1].Contains("Car Transport")) { output.WagonType = WagonType.CarTransport; }
+        }
+
+        if (output.OperationType == OperationType.Remove)
+        {
+            output.NumberOfWagons = int.Parse(parts[1].Split(" ")[1]);
+        }
+
+        return output;
+
     }
 }

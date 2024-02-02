@@ -1,3 +1,4 @@
+/*
 using TrainSwitching.Logic;
 using static TrainSwitching.Logic.Constants;
 
@@ -13,6 +14,33 @@ public class SwitchingOperationParserTests
     [InlineData("At track 5, remove 3 wagons from East", 5, OPERATION_REMOVE, DIRECTION_EAST, null, 3)]
     [InlineData("At track 6, train leaves to West", 6, OPERATION_TRAIN_LEAVE, DIRECTION_WEST, null, null)]
     public void ParseOperation(string line, int trackNumber, int operationType, int direction, int? wagonType, int? numberOfWagons)
+    {
+        var operation = SwitchingOperationParser.Parse(line);
+
+        Assert.Equal(trackNumber, operation.TrackNumber);
+        Assert.Equal(operationType, operation.OperationType);
+        Assert.Equal(direction, operation.Direction);
+        Assert.Equal(wagonType, operation.WagonType);
+        Assert.Equal(numberOfWagons, operation.NumberOfWagons);
+    }
+}
+*/
+
+using TrainSwitching.Logic;
+using static TrainSwitching.Logic.Constants;
+
+namespace TrainSwitching.Tests;
+
+public class SwitchingOperationParserTests
+{
+    [Theory]
+    [InlineData("At track 1, add Passenger Wagon from East", 1, OperationType.Add, Direction.East, WagonType.Passenger, null)]
+    [InlineData("At track 2, add Locomotive from East", 2, OperationType.Add, Direction.East, WagonType.Locomotive, null)]
+    [InlineData("At track 3, add Freight Wagon from West", 3, OperationType.Add, Direction.West, WagonType.Freight, null)]
+    [InlineData("At track 4, add Car Transport Wagon from West", 4, OperationType.Add, Direction.West, WagonType.CarTransport, null)]
+    [InlineData("At track 5, remove 3 wagons from East", 5, OperationType.Remove, Direction.East, null, 3)]
+    [InlineData("At track 6, train leaves to West", 6, OperationType.TrainLeave, Direction.West, null, null)]
+    public void ParseOperation(string line, int trackNumber, OperationType operationType, Direction direction, WagonType? wagonType, int? numberOfWagons)
     {
         var operation = SwitchingOperationParser.Parse(line);
 

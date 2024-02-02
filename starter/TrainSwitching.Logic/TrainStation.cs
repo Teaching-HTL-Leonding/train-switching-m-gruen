@@ -1,5 +1,6 @@
 namespace TrainSwitching.Logic;
 
+using static TrainSwitching.Logic.Constants;
 public class TrainStation
 {
     public Track[] Tracks { get; }
@@ -29,32 +30,17 @@ public class TrainStation
         // A train leaves from a track that does not exist.
         // A train leaves when there are no wagons on the track.
 
-        if (op.TrackNumber < 1 || op.TrackNumber > 10)
-        {
-            return false;
-        }
+        /*
+        if (op.TrackNumber < 1 || op.TrackNumber > 10) { return false; }
 
-        if (op.Direction == Constants.DIRECTION_EAST && (op.TrackNumber == 9 || op.TrackNumber == 10))
-        {
-            return false;
-        }
+        if (op.Direction == Constants.DIRECTION_EAST && (op.TrackNumber == 9 || op.TrackNumber == 10)) { return false; }
 
-        if (Tracks[op.TrackNumber - 1].Wagons.Count < op.NumberOfWagons)
-        {
-            return false;
-        }
+        if (Tracks[op.TrackNumber - 1].Wagons.Count < op.NumberOfWagons) { return false; }
+
+        if (op.OperationType == Constants.OPERATION_TRAIN_LEAVE && !Tracks[op.TrackNumber - 1].Wagons.Contains(Constants.WAGON_TYPE_LOCOMOTIVE)) { return false; }
 
         if (op.OperationType == Constants.OPERATION_TRAIN_LEAVE &&
-        !Tracks[op.TrackNumber - 1].Wagons.Contains(Constants.WAGON_TYPE_LOCOMOTIVE))
-        {
-            return false;
-        }
-
-        if (op.OperationType == Constants.OPERATION_TRAIN_LEAVE &&
-        Tracks[op.TrackNumber - 1].Wagons.Count == 0)
-        {
-            return false;
-        }
+        Tracks[op.TrackNumber - 1].Wagons.Count == 0) { return false; }
 
         if (op.OperationType == Constants.OPERATION_ADD)
         {
@@ -94,6 +80,18 @@ public class TrainStation
         }
 
         return true;
+        */
+
+        if (op.TrackNumber < 1 || op.TrackNumber > 10) { return false; }
+        else if (op.Direction == Direction.East && (op.TrackNumber == 9 || op.TrackNumber == 10)) { return false; }
+        else if (Tracks[op.TrackNumber - 1].Wagons.Count < op.NumberOfWagons) { return false; }
+        else if (op.OperationType == OperationType.TrainLeave && !Tracks[op.TrackNumber - 1].Wagons.Contains(WagonType.Locomotive)) { return false; }
+        else if (op.OperationType == OperationType.TrainLeave && Tracks[op.TrackNumber - 1].Wagons.Count == 0) { return false; }
+        else if (op.OperationType == OperationType.Add) { if (op.Direction == Direction.East) { Tracks[op.TrackNumber - 1].Wagons.Add(op.WagonType!.Value); } else { Tracks[op.TrackNumber - 1].Wagons.Insert(0, op.WagonType!.Value); } }
+        else if (op.OperationType == OperationType.Remove) { if (op.Direction == Direction.East) { for (int i = 0; i < op.NumberOfWagons; i++) { Tracks[op.TrackNumber - 1].Wagons.RemoveAt(Tracks[op.TrackNumber - 1].Wagons.Count - 1); } } else { for (int i = 0; i < op.NumberOfWagons; i++) { Tracks[op.TrackNumber - 1].Wagons.RemoveAt(0); } } }
+        else if (op.OperationType == OperationType.TrainLeave) { Tracks[op.TrackNumber - 1].Wagons.Clear(); }
+
+        return true;
     }
 
     /// <summary>
@@ -105,6 +103,7 @@ public class TrainStation
     /// </remarks>
     public int CalculateChecksum()
     {
+        /*
         int sum = 0;
 
         for (int i = 0; i < Tracks.Length; i++)
@@ -122,6 +121,20 @@ public class TrainStation
                     _ => 0
                 };
             }
+
+            sum += (i + 1) * wagonSum;
+        }
+
+        return sum;
+        */
+
+        int sum = 0;
+
+        for (int i = 0; i < Tracks.Length; i++)
+        {
+            int wagonSum = 0;
+
+            foreach (var wagon in Tracks[i].Wagons) { wagonSum += (int)wagon; }
 
             sum += (i + 1) * wagonSum;
         }
