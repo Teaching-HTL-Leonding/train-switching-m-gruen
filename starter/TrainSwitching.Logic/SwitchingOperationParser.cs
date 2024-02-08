@@ -41,9 +41,7 @@ public static class SwitchingOperationParser
         */
 
         var output = new SwitchingOperation();
-
         var parts = inputLine.Split(", ");
-
         output.TrackNumber = int.Parse(parts[0].Split(" ")[2]);
 
         if (parts[1].StartsWith("add")) { output.OperationType = OperationType.Add; }
@@ -61,10 +59,7 @@ public static class SwitchingOperationParser
             else if (parts[1].Contains("Car Transport")) { output.WagonType = WagonType.CarTransport; }
         }
 
-        if (output.OperationType == OperationType.Remove)
-        {
-            output.NumberOfWagons = int.Parse(parts[1].Split(" ")[1]);
-        }
+        if (output.OperationType == OperationType.Remove) { output.NumberOfWagons = int.Parse(parts[1].Split(" ")[1]); }
 
         return output;
 
